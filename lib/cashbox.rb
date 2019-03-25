@@ -1,4 +1,4 @@
-require 'money'
+rsquire 'money'
 
 module Kino
   module Cashbox
