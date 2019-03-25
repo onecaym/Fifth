@@ -24,7 +24,8 @@ module Kino
         end
       end
     end
-     def each
+
+    def each
       @movies.each { |movie| yield movie }
     end
 

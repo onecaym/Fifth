@@ -31,31 +31,29 @@ module Kino
       @balance -= movie.cost
     end
 
-    def functional_filter(object, &block)
-      if block_given?
-          @movies.select do |param|
-          yield(param)
-        end
+    def functional_filter(_object)
+      @movies.select do |param|
+        yield(param) if block_given?
       end
     end
 
     def define_filter(key, from: nil, arg: nil, &block)
       @filters ||= {}
-      if from.nil?
-        @filters[key] = block
-      else
-        @filters[key] = ->(movie) {@filters[from].call(movie,arg)}
-      end
+      @filters[key] = if from.nil?
+                        block
+                      else
+                        ->(movie) { @filters[from].call(movie, arg) }
+                      end
     end
 
-    def filter(type, &block)
-    if type == nil
-      @movies.select{|movie| block.call(movie)}
-    else
-    internal_filters = type.select{|key,val| MOVIEFIELDS.include?(key)}
-    custom_filters = type.select{|key,val| !MOVIEFIELDS.include?(key)}
-    filtered_objects = internal_filters.empty? ? @movies : super(internal_filters)
-    custom_filters.reduce(filtered_objects) do |res, (key, val)|
+    def filter(type)
+      if type.nil?
+        @movies.select { |movie| yield(movie) }
+      else
+        internal_filters = type.select { |key, _val| MOVIEFIELDS.include?(key) }
+        custom_filters = type.reject { |key, _val| MOVIEFIELDS.include?(key) }
+        filtered_objects = internal_filters.empty? ? @movies : super(internal_filters)
+        custom_filters.reduce(filtered_objects) do |res, (key, val)|
           res.select do |movie|
             if val == true
               @filters[key].call(movie)
@@ -67,18 +65,28 @@ module Kino
       end
     end
 
+    def show_from_block(wish, &block)
+      timenow = Time.now
+      blockmovie = filter(wish, &block).sample
+      puts "Now showing: #{blockmovie.name} (#{timenow.strftime('%H:%M')}\
+       -- #{(timenow + (60 * blockmovie.time)).strftime('%H:%M')})"
+    end
+
+    def show_without_block(wish)
+      timenow = Time.now
+      movie = filter(wish).sample
+      paying_process(movie)
+      puts "Now showing: #{movie.name} (#{timenow.strftime('%H:%M')}\
+       -- #{(timenow + (60 * movie.time)).strftime('%H:%M')})"
+    end
 
     def show(wish = nil, &block)
-      timenow = Time.now
       if block_given?
-        blockmovie = filter(wish, &block).sample
-        puts "Now showing: #{blockmovie.name} (#{timenow.strftime('%H:%M')} -- #{(timenow + (60 * blockmovie.time)).strftime('%H:%M')})"
+        show_from_block(wish, &block)
       else
         raise ArgumentError, 'This field doesnt exist' if filter(wish).empty?
 
-        movie = filter(wish).sample
-        paying_process(movie)
-        puts "Now showing: #{movie.name} (#{timenow.strftime('%H:%M')} -- #{(timenow + (60 * movie.time)).strftime('%H:%M')})"
+        show_without_block(wish, &block)
       end
     end
 

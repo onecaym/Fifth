@@ -13,6 +13,7 @@ AllCops:
     - spec/theater_spec.rb
     - spec/netflix_spec.rb
     - spec/cashbox_spec.rb
+    - lib/1.rb
 Metrics/LineLength:
   Max: 99
 Style/Documentation:
@@ -20,4 +21,4 @@ Style/Documentation:
 Metrics/MethodLength:
   Max: 35
 Metrix/ClassLength:
-  Max: 50
+  Max: 100
