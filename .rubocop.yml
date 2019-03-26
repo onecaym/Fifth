@@ -1,10 +1,14 @@
 
 AllCops:
   Exclude:
-    - spec/moviecollection_spec.rb
-    - spec/movie_spec.rb
     - lib/demo.rb
     - lib/spec_helper.rb
+Metrics/LineLength:
+  Max: 99
+  Exclude:
+    - spec/moviecollection_spec.rb
+    - spec/movie_spec.rb
+    - spec/spec_helper.rb
     - spec/accessor_spec.rb
     - spec/ancientmovie_spec.rb
     - spec/classicmovie_spec.rb
@@ -13,12 +17,25 @@ AllCops:
     - spec/theater_spec.rb
     - spec/netflix_spec.rb
     - spec/cashbox_spec.rb
-    - lib/1.rb
-Metrics/LineLength:
-  Max: 99
 Style/Documentation:
   Enabled: false
 Metrics/MethodLength:
   Max: 35
 Metrix/ClassLength:
   Max: 100
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/moviecollection_spec.rb
+    - spec/movie_spec.rb
+    - spec/spec_helper.rb
+    - spec/accessor_spec.rb
+    - spec/ancientmovie_spec.rb
+    - spec/classicmovie_spec.rb
+    - spec/modernmovie_spec.rb
+    - spec/newmovie_spec.rb
+    - spec/theater_spec.rb
+    - spec/netflix_spec.rb
+    - spec/cashbox_spec.rb
