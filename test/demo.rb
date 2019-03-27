@@ -1,7 +1,7 @@
-require 'movie_collection.rb'
-require 'movie.rb'
-require 'netflix.rb'
-require 'theater.rb'
+require_relative '../lib/movie_collection'
+require_relative '../lib/movie.rb'
+require_relative '../lib/netflix.rb'
+require_relative '../lib/theater.rb'
 require 'csv'
 require 'money'
 movies = Kino::MovieCollection.new('lib/movies.txt')
